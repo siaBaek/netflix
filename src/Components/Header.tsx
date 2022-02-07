@@ -74,7 +74,7 @@ const Circle = styled(motion.span)`
   background-color: ${(props) => props.theme.red};
 `;
 
-const Input = styled(motion.input)`
+const Input = styled(motion.input).attrs({ autoComplete: "off" })`
   transform-origin: right center;
   position: absolute;
   right: 0px;
