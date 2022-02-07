@@ -1,13 +1,12 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { DEFAULT_IMG, getMovies, IGetMoviesResult } from "../../api";
 import { makeImagePath } from "../../utils";
 import { useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-
 import TopRatedMovie from "./TopRatedMovie";
 import UpcomingMovie from "./UpcomingMovie";
 import MovieModal from "./MovieModal";

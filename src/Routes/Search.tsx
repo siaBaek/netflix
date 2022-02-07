@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { IGetMoviesResult } from "../api";
+import { IGetMoviesResult, IGetTvResult } from "../api";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
 import { makeImagePath } from "./../utils";
@@ -166,7 +166,7 @@ export const Search = () => {
       async () => keyword && searchMovie(keyword)
     );
 
-  const { data: tvData, isLoading: tvLoading } = useQuery<IGetMoviesResult>(
+  const { data: tvData, isLoading: tvLoading } = useQuery<IGetTvResult>(
     ["tv", keyword],
     async () => keyword && searchTv(keyword)
   );
@@ -259,6 +259,12 @@ export const Search = () => {
           )}
           {tvData && tvData.total_results > 0 && (
             <>
+              <Banner
+                bgPhoto={makeImagePath(tvData?.results[0].backdrop_path || "")}
+              >
+                <Title>{tvData?.results[0].name}</Title>
+                <Overview>{tvData?.results[0].overview}</Overview>
+              </Banner>
               <Slider>
                 <SliderTitle>{keyword}로 찾은 TV 시리즈</SliderTitle>
                 <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
