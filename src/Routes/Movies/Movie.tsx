@@ -13,10 +13,11 @@ import {
 
 import TopRatedMovie from "./TopRatedMovie";
 import UpcomingMovie from "./UpcomingMovie";
+import MovieModal from "./MovieModal";
 
 const Wrapper = styled.div`
   background: black;
-  padding-bottom: 200px;
+  padding-bottom: 100px;
 `;
 const Loader = styled.div`
   height: 20vh;
@@ -44,7 +45,18 @@ const Overview = styled.p`
 `;
 const Slider = styled.div`
   position: relative;
-  top: -100px;
+  top: 20px;
+  margin-bottom: 300px;
+  padding: 30px 0%;
+`;
+
+const SliderTitle = styled.h3`
+  position: absolute;
+  top: -10px;
+  font-weight: 600;
+  color: white;
+  font-size: 28px;
+  margin-left: 60px;
 `;
 
 const Next = styled(motion.div)`
@@ -67,7 +79,9 @@ const Row = styled(motion.div)`
   position: absolute;
   width: 100%;
   padding: 0 60px;
+  margin-bottom: 400px;
 `;
+
 const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
   background-image: url(${(props) => props.bgPhoto});
@@ -94,47 +108,6 @@ const Info = styled(motion.div)`
     text-align: center;
     font-size: 18px;
   }
-`;
-const Overlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-`;
-const BigMovie = styled(motion.div)`
-  position: absolute;
-  width: 40vw;
-  height: 80vh;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  border-radius: 15px;
-  overflow: hidden;
-  background-color: ${(props) => props.theme.black.lighter};
-`;
-
-const BigCover = styled.div`
-  width: 100%;
-  background-size: cover;
-  background-position: center center;
-  height: 400px;
-`;
-
-const BigTitle = styled.h3`
-  color: ${(props) => props.theme.white.lighter};
-  padding: 20px;
-  font-size: 46px;
-  position: relative;
-  top: -80px;
-`;
-
-const BigOverview = styled.p`
-  padding: 20px;
-  position: relative;
-  top: -80px;
-  color: ${(props) => props.theme.white.lighter};
 `;
 
 const rowVariants = {
@@ -178,17 +151,15 @@ function Movie() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useViewportScroll();
-  const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getMovies
-  );
+  const { data: moviesData, isLoading: moviesIsLoading } =
+    useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
-    if (data) {
+    if (moviesData) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = data.results.length - 1;
+      const totalMovies = moviesData.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
@@ -200,18 +171,23 @@ function Movie() {
   const onOverlayClick = () => history.push("/");
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
-    data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+    moviesData?.results.find(
+      (movie) => movie.id === +bigMovieMatch.params.movieId
+    );
   return (
     <Wrapper>
-      {isLoading ? (
+      {moviesIsLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-            <Title>{data?.results[0].title}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
+          <Banner
+            bgPhoto={makeImagePath(moviesData?.results[0].backdrop_path || "")}
+          >
+            <Title>{moviesData?.results[0].title}</Title>
+            <Overview>{moviesData?.results[0].overview}</Overview>
           </Banner>
           <Slider>
+            <SliderTitle>Now Playing</SliderTitle>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
@@ -221,7 +197,7 @@ function Movie() {
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
               >
-                {data?.results
+                {moviesData?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
@@ -246,37 +222,10 @@ function Movie() {
               <FontAwesomeIcon icon={faChevronRight} size="2x" />
             </Next>
           </Slider>
-          <AnimatePresence>
-            {bigMovieMatch ? (
-              <>
-                <Overlay
-                  onClick={onOverlayClick}
-                  exit={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                />
-                <BigMovie
-                  style={{ top: scrollY.get() + 100 }}
-                  layoutId={bigMovieMatch.params.movieId}
-                >
-                  {clickedMovie && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedMovie.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
-                      <BigOverview>{clickedMovie.overview}</BigOverview>
-                    </>
-                  )}
-                </BigMovie>
-              </>
-            ) : null}
-          </AnimatePresence>
-          {/* <TopRatedMovie /> */}
+
+          <TopRatedMovie />
+          <UpcomingMovie />
+          <MovieModal />
         </>
       )}
     </Wrapper>

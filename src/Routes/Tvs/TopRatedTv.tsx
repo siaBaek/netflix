@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { getUpcoming, IGetUpcomingResult } from "../../api";
+import { getTopRated, IGetTopRatedResult } from "../../api";
 import { makeImagePath } from "../../utils";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -162,19 +162,19 @@ const infoVariants = {
 };
 const offset = 6;
 
-function UpcomingMovie() {
+function TopRatedTv() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useViewportScroll();
-  const { data: upcomingData, isLoading: upcomingIsLoading } =
-    useQuery<IGetUpcomingResult>(["movies", "upcoming"], getUpcoming);
+  const { data: topData, isLoading: topIsLoading } =
+    useQuery<IGetTopRatedResult>(["movies", "topRated"], getTopRated);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
-    if (upcomingData) {
+    if (topData) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = upcomingData.results.length - 1;
+      const totalMovies = topData.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
@@ -186,17 +186,17 @@ function UpcomingMovie() {
   const onOverlayClick = () => history.push("/");
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
-    upcomingData?.results.find(
+    topData?.results.find(
       (movie) => movie.id === +bigMovieMatch.params.movieId
     );
   return (
     <>
-      {upcomingIsLoading ? (
+      {topIsLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
           <Slider>
-            <SliderTitle>Upcoming</SliderTitle>
+            <SliderTitle>Top Rated</SliderTitle>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
@@ -206,7 +206,7 @@ function UpcomingMovie() {
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
               >
-                {upcomingData?.results
+                {topData?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
@@ -267,4 +267,4 @@ function UpcomingMovie() {
   );
 }
 
-export default UpcomingMovie;
+export default TopRatedTv;

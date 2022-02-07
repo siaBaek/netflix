@@ -11,37 +11,27 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Wrapper = styled.div`
-  background: black;
-  padding-bottom: 200px;
-`;
 const Loader = styled.div`
   height: 20vh;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-const Banner = styled.div<{ bgPhoto: string }>`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-    url(${(props) => props.bgPhoto});
-  background-size: cover;
-`;
-const Title = styled.h2`
-  font-size: 68px;
-  margin-bottom: 20px; ;
-`;
-const Overview = styled.p`
-  font-size: 30px;
-  width: 50%;
-`;
+
 const Slider = styled.div`
   position: relative;
-  top: -100px;
+  top: 20px;
+  margin-bottom: 300px;
+  padding: 30px 0%;
+`;
+
+const SliderTitle = styled.h3`
+  position: absolute;
+  top: -10px;
+  font-weight: 600;
+  color: white;
+  font-size: 28px;
+  margin-left: 60px;
 `;
 
 const Next = styled(motion.div)`
@@ -177,7 +167,7 @@ function TopRatedMovie() {
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useViewportScroll();
   const { data: topData, isLoading: topIsLoading } =
-    useQuery<IGetTopRatedResult>(["movies", "nowPlaying"], getTopRated);
+    useQuery<IGetTopRatedResult>(["movies", "topRated"], getTopRated);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
@@ -200,12 +190,13 @@ function TopRatedMovie() {
       (movie) => movie.id === +bigMovieMatch.params.movieId
     );
   return (
-    <Wrapper>
+    <>
       {topIsLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
           <Slider>
+            <SliderTitle>Top Rated</SliderTitle>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
@@ -272,7 +263,7 @@ function TopRatedMovie() {
           </AnimatePresence>
         </>
       )}
-    </Wrapper>
+    </>
   );
 }
 
