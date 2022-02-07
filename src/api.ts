@@ -123,26 +123,20 @@ export interface IGetTvResult {
 
 export function getMovies() {
   return fetch(
-    `${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&append_to_response=KR`
+    `${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&language=ko-KR`
   ).then((response) => response.json());
 }
 
-// export function getLatest() {
-//   return fetch(`${BASE_PATH}/movie/latest?api_key=${API_KEY}`).then(
-//     (response) => response.json()
-//   );
-// }
-
 export function getTopRated() {
-  return fetch(`${BASE_PATH}/movie/top_rated?api_key=${API_KEY}`).then(
-    (response) => response.json()
-  );
+  return fetch(
+    `${BASE_PATH}/movie/top_rated?api_key=${API_KEY}&language=ko-KR`
+  ).then((response) => response.json());
 }
 
 export function getUpcoming() {
-  return fetch(`${BASE_PATH}/movie/upcoming?api_key=${API_KEY}`).then(
-    (response) => response.json()
-  );
+  return fetch(
+    `${BASE_PATH}/movie/upcoming?api_key=${API_KEY}&language=ko-KR`
+  ).then((response) => response.json());
 }
 
 export const getMovieDetail = (movieId: string) => {
