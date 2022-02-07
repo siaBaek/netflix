@@ -5,6 +5,8 @@ import {
   DEFAULT_IMG,
   getAiringTodayTv,
   getOnTheAirTv,
+  getTvDetail,
+  IGetTvDetailResult,
   IGetTvResult,
 } from "../../api";
 import { makeImagePath } from "../../utils";
@@ -15,6 +17,11 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import TopRatedTv from "./TopRatedTv";
+import { useSetRecoilState } from "recoil";
+import { isDetail } from "../../atom";
+import TvModal from "./TvModal";
+import PopularTv from "./PopularTv";
 
 const Wrapper = styled.div`
   background: black;
@@ -148,27 +155,90 @@ const infoVariants = {
 };
 const offset = 6;
 
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+`;
+const BigMovie = styled(motion.div)`
+  position: absolute;
+  width: 40vw;
+  height: 80vh;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.black.lighter};
+`;
+
+const BigCover = styled.div`
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  height: 400px;
+`;
+
+const BigTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 20px;
+  font-size: 46px;
+  position: relative;
+  top: -80px;
+`;
+
+const BigOverview = styled.p`
+  padding: 20px;
+  position: relative;
+  top: -80px;
+  color: ${(props) => props.theme.white.lighter};
+`;
+
 function Tv() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
+  const { scrollY } = useViewportScroll();
+  const setDetail = useSetRecoilState(isDetail);
   const { data: tvsData, isLoading: tvsIsLoading } = useQuery<IGetTvResult>(
-    ["tvs", "on_the_air"],
+    ["tv", "airing_today"],
     getAiringTodayTv
   );
+
+  const {
+    data: detailData,
+    isLoading: detailLoading,
+    refetch,
+  } = useQuery<IGetTvDetailResult>(
+    ["tv", bigTvMatch?.params.tvId],
+    async () => bigTvMatch && getTvDetail(bigTvMatch?.params.tvId),
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const onOverlayClick = () => {
+    history.push("/");
+    setDetail(false);
+  };
+
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
     if (tvsData) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = tvsData.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      const totalTvs = tvsData.results.length - 1;
+      const maxIndex = Math.floor(totalTvs / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+  const onBoxClicked = (tvId: number) => {
+    history.push(`/tv/${tvId}`);
   };
 
   return (
@@ -223,6 +293,9 @@ function Tv() {
               <FontAwesomeIcon icon={faChevronRight} size="2x" />
             </Next>
           </Slider>
+          <TopRatedTv />
+          <PopularTv />
+          <TvModal />
         </>
       )}
     </Wrapper>

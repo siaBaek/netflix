@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { DEFAULT_IMG, getMovieDetail, IGetMovieDetailResult } from "../../api";
+import { DEFAULT_IMG, getTvDetail, IGetTvDetailResult } from "../../api";
 import { makeImagePath } from "../../utils";
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -51,9 +51,9 @@ const BigOverview = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 
-function MovieModal() {
+function TvModal() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
   const { scrollY } = useViewportScroll();
   const setDetail = useSetRecoilState(isDetail);
 
@@ -61,9 +61,9 @@ function MovieModal() {
     data: detailData,
     isLoading: detailIsLoading,
     refetch,
-  } = useQuery<IGetMovieDetailResult>(
-    ["movies", bigMovieMatch?.params.movieId],
-    async () => bigMovieMatch && getMovieDetail(bigMovieMatch?.params.movieId),
+  } = useQuery<IGetTvDetailResult>(
+    ["tv", bigTvMatch?.params.tvId],
+    async () => bigTvMatch && getTvDetail(bigTvMatch?.params.tvId),
     {
       enabled: false,
       refetchOnWindowFocus: false,
@@ -71,19 +71,19 @@ function MovieModal() {
   );
 
   useEffect(() => {
-    if (bigMovieMatch?.params.movieId) {
+    if (bigTvMatch?.params.tvId) {
       refetch();
     }
-  }, [bigMovieMatch?.params.movieId, refetch]);
+  }, [bigTvMatch?.params.tvId, refetch]);
 
   const onOverlayClick = () => {
-    history.push("/");
+    history.push("/tv");
     setDetail(false);
   };
 
   return (
     <AnimatePresence>
-      {bigMovieMatch ? (
+      {bigTvMatch ? (
         <>
           <Overlay
             onClick={onOverlayClick}
@@ -92,7 +92,7 @@ function MovieModal() {
           />
           <BigMovie
             style={{ top: scrollY.get() + 100 }}
-            layoutId={bigMovieMatch.params.movieId}
+            layoutId={bigTvMatch.params.tvId}
           >
             {detailData && (
               <>
@@ -105,7 +105,7 @@ function MovieModal() {
                     })`,
                   }}
                 />
-                <BigTitle>{detailData.title}</BigTitle>
+                <BigTitle>{detailData.name}</BigTitle>
                 <BigOverview>{detailData.overview}</BigOverview>
               </>
             )}
@@ -116,4 +116,4 @@ function MovieModal() {
   );
 }
 
-export default MovieModal;
+export default TvModal;

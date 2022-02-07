@@ -1,7 +1,13 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { getTopRated, IGetTopRatedResult } from "../../api";
+import {
+  DEFAULT_IMG,
+  getTopRated,
+  getTopTv,
+  IGetTopRatedResult,
+  IGetTvResult,
+} from "../../api";
 import { makeImagePath } from "../../utils";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -164,34 +170,34 @@ const offset = 6;
 
 function TopRatedTv() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
   const { scrollY } = useViewportScroll();
-  const { data: topData, isLoading: topIsLoading } =
-    useQuery<IGetTopRatedResult>(["movies", "topRated"], getTopRated);
+  const { data: topTvData, isLoading: topTvIsLoading } = useQuery<IGetTvResult>(
+    ["tv", "top_Rated"],
+    getTopTv
+  );
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
-    if (topData) {
+    if (topTvData) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = topData.results.length - 1;
+      const totalMovies = topTvData.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+  const onBoxClicked = (tvId: number) => {
+    history.push(`/tv/${tvId}`);
   };
-  const onOverlayClick = () => history.push("/");
+  const onOverlayClick = () => history.push("/tv");
   const clickedMovie =
-    bigMovieMatch?.params.movieId &&
-    topData?.results.find(
-      (movie) => movie.id === +bigMovieMatch.params.movieId
-    );
+    bigTvMatch?.params.tvId &&
+    topTvData?.results.find((tv) => tv.id === +bigTvMatch.params.tvId);
   return (
     <>
-      {topIsLoading ? (
+      {topTvIsLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -206,22 +212,26 @@ function TopRatedTv() {
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
               >
-                {topData?.results
+                {topTvData?.results
                   .slice(1)
                   .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
+                  .map((tv) => (
                     <Box
-                      layoutId={movie.id + ""}
-                      key={movie.id}
+                      layoutId={tv.id + ""}
+                      key={tv.id}
                       whileHover="hover"
                       initial="normal"
                       variants={boxVariants}
-                      onClick={() => onBoxClicked(movie.id)}
+                      onClick={() => onBoxClicked(tv.id)}
                       transition={{ type: "tween" }}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      bgPhoto={
+                        tv.backdrop_path
+                          ? makeImagePath(tv.backdrop_path, "w500")
+                          : DEFAULT_IMG
+                      }
                     >
                       <Info variants={infoVariants}>
-                        <h4>{movie.title}</h4>
+                        <h4>{tv.name}</h4>
                       </Info>
                     </Box>
                   ))}
@@ -232,7 +242,7 @@ function TopRatedTv() {
             </Next>
           </Slider>
           <AnimatePresence>
-            {bigMovieMatch ? (
+            {bigTvMatch ? (
               <>
                 <Overlay
                   onClick={onOverlayClick}
@@ -241,7 +251,7 @@ function TopRatedTv() {
                 />
                 <BigMovie
                   style={{ top: scrollY.get() + 100 }}
-                  layoutId={bigMovieMatch.params.movieId}
+                  layoutId={bigTvMatch.params.tvId}
                 >
                   {clickedMovie && (
                     <>
@@ -253,7 +263,7 @@ function TopRatedTv() {
                           )})`,
                         }}
                       />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
+                      <BigTitle>{clickedMovie.name}</BigTitle>
                       <BigOverview>{clickedMovie.overview}</BigOverview>
                     </>
                   )}
