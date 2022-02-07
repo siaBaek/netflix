@@ -242,7 +242,11 @@ export const Search = () => {
                           variants={boxVariants}
                           onClick={() => onMovieClicked(movie.id)}
                           transition={{ type: "tween" }}
-                          bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                          bgPhoto={
+                            movie.backdrop_path
+                              ? makeImagePath(movie.backdrop_path, "w500")
+                              : DEFAULT_IMG
+                          }
                         >
                           <Info variants={infoVariants}>
                             <h4>{movie.title}</h4>
