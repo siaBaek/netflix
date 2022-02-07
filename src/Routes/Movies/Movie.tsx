@@ -6,10 +6,7 @@ import { makeImagePath } from "../../utils";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 import TopRatedMovie from "./TopRatedMovie";
 import UpcomingMovie from "./UpcomingMovie";
@@ -149,12 +146,11 @@ const offset = 6;
 
 function Movie() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-  const { scrollY } = useViewportScroll();
   const { data: moviesData, isLoading: moviesIsLoading } =
     useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+
   const increaseIndex = () => {
     if (moviesData) {
       if (leaving) return;
@@ -168,12 +164,7 @@ function Movie() {
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}`);
   };
-  const onOverlayClick = () => history.push("/");
-  const clickedMovie =
-    bigMovieMatch?.params.movieId &&
-    moviesData?.results.find(
-      (movie) => movie.id === +bigMovieMatch.params.movieId
-    );
+
   return (
     <Wrapper>
       {moviesIsLoading ? (
@@ -209,7 +200,11 @@ function Movie() {
                       variants={boxVariants}
                       onClick={() => onBoxClicked(movie.id)}
                       transition={{ type: "tween" }}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      bgPhoto={
+                        movie.backdrop_path
+                          ? makeImagePath(movie.backdrop_path, "w500")
+                          : DEFAULT_IMG
+                      }
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title}</h4>

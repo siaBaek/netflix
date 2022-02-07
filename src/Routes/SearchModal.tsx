@@ -1,12 +1,12 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { DEFAULT_IMG, getMovieDetail, IGetMovieDetailResult } from "../../api";
-import { makeImagePath } from "../../utils";
+import { DEFAULT_IMG, getMovieDetail, IGetMovieDetailResult } from "../api";
+import { makeImagePath } from "../utils";
 import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { isDetail } from "../../atom";
+import { isDetail } from "../atom";
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -50,7 +50,7 @@ const BigOverview = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 
-function MovieModal() {
+function SearchModal() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useViewportScroll();
@@ -115,4 +115,4 @@ function MovieModal() {
   );
 }
 
-export default MovieModal;
+export default SearchModal;
