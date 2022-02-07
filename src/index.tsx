@@ -61,6 +61,7 @@ table {
   box-sizing: border-box;
 }
 body {
+  overflow-x: hidden;
   font-weight: 300;
   font-family: "Sunflower", sans-serif;
   color:${(props) => props.theme.white.darker};
