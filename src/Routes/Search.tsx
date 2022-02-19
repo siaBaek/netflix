@@ -8,7 +8,10 @@ import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DEFAULT_IMG, searchMovie, searchTv } from "../api";
 import { useLocation } from "react-router";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import SearchModal from "./SearchModal";
 
 const Wrapper = styled.div`
@@ -64,6 +67,20 @@ const SliderTitle = styled.h3`
   margin-left: 60px;
 `;
 
+const Prev = styled(motion.div)`
+  height: 80%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.3;
+  position: absolute;
+  left: 1rem;
+  top: 100px;
+  background-color: rgba(0, 0, 0, 1);
+  z-index: 9;
+`;
+
 const Next = styled(motion.div)`
   height: 80%;
   cursor: pointer;
@@ -117,15 +134,15 @@ const Info = styled(motion.div)`
 `;
 
 const rowVariants = {
-  hidden: {
-    x: window.outerWidth + 5,
-  },
+  hidden: (back: boolean) => ({
+    x: back ? -window.outerWidth - 5 : window.outerWidth + 5,
+  }),
   visible: {
     x: 0,
   },
-  exit: {
-    x: -window.outerWidth - 5,
-  },
+  exit: (back: boolean) => ({
+    x: back ? window.outerWidth + 5 : -window.outerWidth - 5,
+  }),
 };
 const boxVariants = {
   normal: {
@@ -173,11 +190,23 @@ export const Search = () => {
 
   const [movieIndex, setMovieIndex] = useState(0);
   const [tvIndex, setTvIndex] = useState(0);
+  const [back, setBack] = useState(false);
   const [leaving, setLeaving] = useState(false);
 
+  const decreaseMovieIndex = () => {
+    if (movieData) {
+      if (leaving) return;
+      setBack(true);
+      toggleLeaving();
+      const totalMovies = movieData.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setMovieIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+    }
+  };
   const increaseMovieIndex = () => {
     if (movieData) {
       if (leaving) return;
+      setBack(false);
       toggleLeaving();
       const totalMovies = movieData.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
@@ -185,9 +214,21 @@ export const Search = () => {
     }
   };
 
+  const decreaseTvIndex = () => {
+    if (tvData) {
+      if (leaving) return;
+      setBack(true);
+      toggleLeaving();
+      const totalTvs = tvData.results.length - 1;
+      const maxIndex = Math.floor(totalTvs / offset) - 1;
+      setTvIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+    }
+  };
+
   const increaseTvIndex = () => {
     if (tvData) {
       if (leaving) return;
+      setBack(false);
       toggleLeaving();
       const totalTvs = tvData.results.length - 1;
       const maxIndex = Math.floor(totalTvs / offset) - 1;
@@ -222,8 +263,16 @@ export const Search = () => {
               </Banner>
               <Slider>
                 <SliderTitle>{keyword}로 찾은 영화</SliderTitle>
-                <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+                <Prev whileHover={{ opacity: 1 }} onClick={decreaseMovieIndex}>
+                  <FontAwesomeIcon icon={faChevronLeft} size="2x" />
+                </Prev>
+                <AnimatePresence
+                  custom={back}
+                  initial={false}
+                  onExitComplete={toggleLeaving}
+                >
                   <Row
+                    custom={back}
                     variants={rowVariants}
                     initial="hidden"
                     animate="visible"
@@ -271,8 +320,16 @@ export const Search = () => {
               </Banner>
               <Slider>
                 <SliderTitle>{keyword}로 찾은 TV 시리즈</SliderTitle>
-                <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+                <Prev whileHover={{ opacity: 1 }} onClick={decreaseTvIndex}>
+                  <FontAwesomeIcon icon={faChevronLeft} size="2x" />
+                </Prev>
+                <AnimatePresence
+                  custom={back}
+                  initial={false}
+                  onExitComplete={toggleLeaving}
+                >
                   <Row
+                    custom={back}
                     variants={rowVariants}
                     initial="hidden"
                     animate="visible"
