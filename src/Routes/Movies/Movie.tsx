@@ -157,6 +157,7 @@ const infoVariants = {
     },
   },
 };
+
 const offset = 6;
 
 function Movie() {
