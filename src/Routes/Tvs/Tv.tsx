@@ -13,6 +13,7 @@ import {
 import TopRatedTv from "./TopRatedTv";
 import TvModal from "./TvModal";
 import PopularTv from "./PopularTv";
+import { theme } from "../../theme";
 
 const Wrapper = styled.div`
   background: black;
@@ -21,9 +22,7 @@ const Wrapper = styled.div`
 
 const Loader = styled.div`
   height: 20vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
 `;
 const Banner = styled.div<{ bgPhoto: string }>`
   height: 100vh;
@@ -65,9 +64,7 @@ const SliderTitle = styled.h3`
 const Prev = styled(motion.div)`
   height: 80%;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
   opacity: 0.3;
   position: absolute;
   left: 1rem;
@@ -79,9 +76,7 @@ const Prev = styled(motion.div)`
 const Next = styled(motion.div)`
   height: 80%;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
   opacity: 0.3;
   position: absolute;
   right: 1rem;
