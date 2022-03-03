@@ -10,12 +10,11 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { theme } from "../../theme";
 
 const Loader = styled.div`
   height: 20vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
 `;
 
 const Slider = styled.div`
@@ -37,9 +36,7 @@ const SliderTitle = styled.h3`
 const Prev = styled(motion.div)`
   height: 80%;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
   opacity: 0.3;
   position: absolute;
   left: 1rem;
@@ -51,9 +48,7 @@ const Prev = styled(motion.div)`
 const Next = styled(motion.div)`
   height: 80%;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
   opacity: 0.3;
   position: absolute;
   right: 1rem;
@@ -70,6 +65,7 @@ const Row = styled(motion.div)`
   padding: 0 60px;
   margin-bottom: 400px;
 `;
+
 const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
   background-image: url(${(props) => props.bgPhoto});
