@@ -10,6 +10,7 @@ import { DEFAULT_IMG, searchMovie, searchTv } from "../api";
 import { useLocation } from "react-router";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import SearchModal from "./SearchModal";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const Wrapper = styled.div`
   background: black;
@@ -174,6 +175,7 @@ export const Search = () => {
   const [movieIndex, setMovieIndex] = useState(0);
   const [tvIndex, setTvIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const right = faChevronRight as IconProp;
 
   const increaseMovieIndex = () => {
     if (movieData) {
@@ -206,7 +208,7 @@ export const Search = () => {
 
   return (
     <Wrapper>
-      {movieLoading && tvLoading && movieData?.results && tvData?.results ? (
+      {movieLoading && tvLoading && movieData && tvData ? (
         <Loader>검색 결과가 없습니다.</Loader>
       ) : movieData || tvData ? (
         <>
@@ -256,7 +258,7 @@ export const Search = () => {
                   </Row>
                 </AnimatePresence>
                 <Next whileHover={{ opacity: 1 }} onClick={increaseMovieIndex}>
-                  <FontAwesomeIcon icon={faChevronRight} size="2x" />
+                  <FontAwesomeIcon icon={right} size="2x" />
                 </Next>
               </Slider>
             </>
@@ -305,7 +307,7 @@ export const Search = () => {
                   </Row>
                 </AnimatePresence>
                 <Next whileHover={{ opacity: 1 }} onClick={increaseTvIndex}>
-                  <FontAwesomeIcon icon={faChevronRight} size="2x" />
+                  <FontAwesomeIcon icon={right} size="2x" />
                 </Next>
               </Slider>
             </>

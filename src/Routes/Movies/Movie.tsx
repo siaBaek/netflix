@@ -10,6 +10,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import TopRatedMovie from "./TopRatedMovie";
 import UpcomingMovie from "./UpcomingMovie";
 import MovieModal from "./MovieModal";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const Wrapper = styled.div`
   background: black;
@@ -149,6 +150,7 @@ function Movie() {
     useQuery<IGetMoviesResult>(["movies", "nowPlaying"], getMovies);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const right = faChevronRight as IconProp;
 
   const increaseIndex = () => {
     if (moviesData) {
@@ -213,7 +215,7 @@ function Movie() {
               </Row>
             </AnimatePresence>
             <Next whileHover={{ opacity: 1 }} onClick={increaseIndex}>
-              <FontAwesomeIcon icon={faChevronRight} size="2x" />
+              <FontAwesomeIcon icon={right} size="2x" />
             </Next>
           </Slider>
 

@@ -10,6 +10,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import TopRatedTv from "./TopRatedTv";
 import TvModal from "./TvModal";
 import PopularTv from "./PopularTv";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const Wrapper = styled.div`
   background: black;
@@ -154,9 +155,10 @@ function Tv() {
     ["tv", "airing_today"],
     getAiringTodayTv
   );
-
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const right = faChevronRight as IconProp;
+
   const increaseIndex = () => {
     if (tvsData) {
       if (leaving) return;
@@ -220,7 +222,7 @@ function Tv() {
               </Row>
             </AnimatePresence>
             <Next whileHover={{ opacity: 1 }} onClick={increaseIndex}>
-              <FontAwesomeIcon icon={faChevronRight} size="2x" />
+              <FontAwesomeIcon icon={right} size="2x" />
             </Next>
           </Slider>
           <TopRatedTv />

@@ -10,6 +10,7 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const Loader = styled.div`
   height: 20vh;
@@ -170,6 +171,8 @@ function TopRatedMovie() {
     useQuery<IGetTopRatedResult>(["movies", "topRated"], getTopRated);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const right = faChevronRight as IconProp;
+
   const increaseIndex = () => {
     if (topData) {
       if (leaving) return;
@@ -228,7 +231,7 @@ function TopRatedMovie() {
               </Row>
             </AnimatePresence>
             <Next whileHover={{ opacity: 1 }} onClick={increaseIndex}>
-              <FontAwesomeIcon icon={faChevronRight} size="2x" />
+              <FontAwesomeIcon icon={right} size="2x" />
             </Next>
           </Slider>
           <AnimatePresence>
