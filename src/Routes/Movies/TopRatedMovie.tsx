@@ -34,20 +34,6 @@ const SliderTitle = styled.h3`
   margin-left: 60px;
 `;
 
-const Prev = styled(motion.div)`
-  height: 80%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.3;
-  position: absolute;
-  left: 1rem;
-  top: 100px;
-  background-color: rgba(0, 0, 0, 1);
-  z-index: 9;
-`;
-
 const Next = styled(motion.div)`
   height: 80%;
   cursor: pointer;
@@ -140,17 +126,16 @@ const BigOverview = styled.p`
 `;
 
 const rowVariants = {
-  hidden: (back: boolean) => ({
-    x: back ? -window.outerWidth - 5 : window.outerWidth + 5,
-  }),
+  hidden: {
+    x: window.outerWidth + 5,
+  },
   visible: {
     x: 0,
   },
-  exit: (back: boolean) => ({
-    x: back ? window.outerWidth + 5 : -window.outerWidth - 5,
-  }),
+  exit: {
+    x: -window.outerWidth - 5,
+  },
 };
-
 const boxVariants = {
   normal: {
     scale: 1,
@@ -184,23 +169,10 @@ function TopRatedMovie() {
   const { data: topData, isLoading: topIsLoading } =
     useQuery<IGetTopRatedResult>(["movies", "topRated"], getTopRated);
   const [index, setIndex] = useState(0);
-  const [back, setBack] = useState(false);
   const [leaving, setLeaving] = useState(false);
-
-  const decreaseIndex = () => {
-    if (topData) {
-      if (leaving) return;
-      setBack(true);
-      toggleLeaving();
-      const totalMovies = topData.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-      setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-    }
-  };
   const increaseIndex = () => {
     if (topData) {
       if (leaving) return;
-      setBack(false);
       toggleLeaving();
       const totalMovies = topData.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
@@ -225,16 +197,8 @@ function TopRatedMovie() {
         <>
           <Slider>
             <SliderTitle>Top Rated</SliderTitle>
-            <Prev whileHover={{ opacity: 1 }} onClick={decreaseIndex}>
-              <FontAwesomeIcon icon={faChevronLeft} size="2x" />
-            </Prev>
-            <AnimatePresence
-              custom={back}
-              initial={false}
-              onExitComplete={toggleLeaving}
-            >
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
-                custom={back}
                 variants={rowVariants}
                 initial="hidden"
                 animate="visible"

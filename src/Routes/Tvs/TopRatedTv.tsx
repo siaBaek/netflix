@@ -1,7 +1,13 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { DEFAULT_IMG, getTopTv, IGetTvResult } from "../../api";
+import {
+  DEFAULT_IMG,
+  getTopRated,
+  getTopTv,
+  IGetTopRatedResult,
+  IGetTvResult,
+} from "../../api";
 import { makeImagePath } from "../../utils";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -32,20 +38,6 @@ const SliderTitle = styled.h3`
   color: white;
   font-size: 28px;
   margin-left: 60px;
-`;
-
-const Prev = styled(motion.div)`
-  height: 80%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.3;
-  position: absolute;
-  left: 1rem;
-  top: 100px;
-  background-color: rgba(0, 0, 0, 1);
-  z-index: 9;
 `;
 
 const Next = styled(motion.div)`
@@ -140,15 +132,15 @@ const BigOverview = styled.p`
 `;
 
 const rowVariants = {
-  hidden: (back: boolean) => ({
-    x: back ? -window.outerWidth - 5 : window.outerWidth + 5,
-  }),
+  hidden: {
+    x: window.outerWidth + 5,
+  },
   visible: {
     x: 0,
   },
-  exit: (back: boolean) => ({
-    x: back ? window.outerWidth + 5 : -window.outerWidth - 5,
-  }),
+  exit: {
+    x: -window.outerWidth - 5,
+  },
 };
 const boxVariants = {
   normal: {
@@ -185,23 +177,10 @@ function TopRatedTv() {
     getTopTv
   );
   const [index, setIndex] = useState(0);
-  const [back, setBack] = useState(false);
   const [leaving, setLeaving] = useState(false);
-
-  const decreaseIndex = () => {
-    if (topTvData) {
-      if (leaving) return;
-      setBack(true);
-      toggleLeaving();
-      const totalMovies = topTvData.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-      setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-    }
-  };
   const increaseIndex = () => {
     if (topTvData) {
       if (leaving) return;
-      setBack(false);
       toggleLeaving();
       const totalMovies = topTvData.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
@@ -224,16 +203,8 @@ function TopRatedTv() {
         <>
           <Slider>
             <SliderTitle>Top Rated</SliderTitle>
-            <Prev whileHover={{ opacity: 1 }} onClick={decreaseIndex}>
-              <FontAwesomeIcon icon={faChevronLeft} size="2x" />
-            </Prev>
-            <AnimatePresence
-              custom={back}
-              initial={false}
-              onExitComplete={toggleLeaving}
-            >
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
-                custom={back}
                 variants={rowVariants}
                 initial="hidden"
                 animate="visible"
