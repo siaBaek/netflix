@@ -18,12 +18,11 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { theme } from "../../theme";
 
 const Loader = styled.div`
   height: 20vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
 `;
 
 const Slider = styled.div`
@@ -42,12 +41,22 @@ const SliderTitle = styled.h3`
   margin-left: 60px;
 `;
 
+const Prev = styled(motion.div)`
+  height: 80%;
+  cursor: pointer;
+  ${theme.flexCenter}
+  opacity: 0.3;
+  position: absolute;
+  left: 1rem;
+  top: 100px;
+  background-color: rgba(0, 0, 0, 1);
+  z-index: 9;
+`;
+
 const Next = styled(motion.div)`
   height: 80%;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${theme.flexCenter}
   opacity: 0.3;
   position: absolute;
   right: 1rem;

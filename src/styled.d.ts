@@ -12,5 +12,6 @@ declare module "styled-components" {
       darker: string;
       lighter: string;
     };
+    flexCenter: css;
   }
 }
