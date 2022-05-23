@@ -1,46 +1,26 @@
-# Getting Started with Create React App
+# 넷플릭스
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 기술
 
-## Available Scripts
+`React.js` `Typescript` `React-query` `Recoil` `Styled-components` `framer-motion`
 
-In the project directory, you can run:
+## 특징
 
-### `npm start`
+- Movie Database API를 이용한 data fetch
+- 영화/TV프로그램 주제별 조회
+- 키워드 검색 기능
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 스크린샷
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<div>
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781888-5be6031c-30f1-4056-8347-9d5f6e655185.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781900-1d678bbc-89d1-45ca-8c6d-b8060599ed45.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169782621-8d96e29d-7c36-4816-b064-fc9f12ef8b65.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781924-d384005e-26d2-4082-87f9-fe2860817ddb.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781954-84ce5fcc-7ec6-43c0-8808-f3082c3b2594.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781966-a09fcd62-1fe4-41a4-9edd-5e951e07b1fe.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781991-194608b3-8573-495c-aa37-e0fcae4d54f5.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781992-4d47d80c-37cc-4eb9-8e39-1b840570a60a.png" />
+<img width="1440" src="https://user-images.githubusercontent.com/94106976/169781994-2c5a0734-f9ff-45da-bc6b-02906c6802e4.png" />
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+</div>
